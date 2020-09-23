@@ -5,7 +5,6 @@ from app.forms import LoginForm
 @appInstance.route('/')
 @appInstance.route('/index')
 def index():
-    user = {'username': 'Tomislav'}
     people = [{
         'name': 'Edward Teller',
         'field': 'Nuclear Physics',

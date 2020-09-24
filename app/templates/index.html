@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <h1>Hi, {{ current_user.username }}!</h1>
     <h2>List of people:</h2>
     {% for person in people %}
         {{ person.name }} works in {{ person.field }}<br>

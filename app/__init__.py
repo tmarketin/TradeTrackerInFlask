@@ -6,8 +6,10 @@ from flask_login import LoginManager
 
 appInstance = Flask(__name__)
 appInstance.config.from_object(Config)
+
 db = SQLAlchemy(appInstance)
 migrateInstance = Migrate(appInstance, db)
+
 loginInstance = LoginManager(appInstance)
 loginInstance.login_view = 'login'
 

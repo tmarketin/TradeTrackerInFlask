@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <script src="{{url_for('static', filename='addTrade.js')}}"></script>
+
+    <h1>Hi, {{ current_user.username }}!</h1>
+    <h2>We'll be adding new trades here</h2>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <table style="table-layout: fixed; width: 40%">
+            <tr>
+                <td>
+                    {{ form.ticker.label}} :<br>{{ form.ticker(size=4) }} <br>
+                    {% for error in form.ticker.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ form.playid.label}} :<br>{{ form.playid(size=10) }} <br>
+                </td>
+                <td>
+                    {{ form.strategy.label}} :<br>{{ form.strategy(size=64, onchange="displayTradeLegsFromStrategy()", list="id_datalist") }} <br>
+                    <datalist id="id_datalist">
+                        <option value="Long Call"></option>
+                        <option value="Long Put"></option>
+                        <option value="Cash Secured Put"></option>
+                        <option value="Covered Call"></option>
+                        <option value="Put Credit Spread"></option>
+                        <option value="Put Debit Spread"></option>
+                        <option value="Call Credit Spread"></option>
+                        <option value="Call Debit Spread"></option>
+                        <option value="Calendar Call Spread"></option>
+                        <option value="Calendar Put Spread"></option>
+                        <option value="Diagonal Spread"></option>
+                        <option value="Double Calendar Spread"></option>
+                    </datalist>
+                    {% for error in form.strategy.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.no_contracts.label}} :<br>{{ form.no_contracts(min="1") }} <br>
+                    {% for error in form.no_contracts.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ form.no_legs.label}} :<br>{{ form.no_legs(min="1", max="4", onchange="displayTradeLegsFromNoLegs()") }} <br>
+                    {% for error in form.no_legs.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ form.comment.label}} :<br>{{ form.comment() }} <br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.open_date.label}} :<br>{{ form.open_date(onchange="calcPnl()") }} <br>
+                    {% for error in form.open_date.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ form.open_premium.label}} :<br>{{ form.open_premium(step="0.01", onchange="calcPnl()") }} <br>
+                    {% for error in form.open_premium.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ form.open_underlying.label}} :<br>{{ form.open_underlying(step="0.01", min="0.00") }} <br>
+                    {% for error in form.open_underlying.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.close_date.label}} :<br>{{ form.close_date(onchange="calcPnl()") }} <br>
+                    {% for error in form.close_date.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ form.close_premium.label}} :<br>{{ form.close_premium(step="0.01", onchange="calcPnl()") }} <br>
+                    {% for error in form.close_premium.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ form.close_underlying.label}} :<br>{{ form.close_underlying(step="0.01", min="0.00") }} <br>
+                    {% for error in form.close_underlying.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.pnl.label}} :<br>{{ form.pnl(step="0.01") }} <br>
+                    {% for error in form.pnl.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ form.dailypnl.label}} :<br>{{ form.dailypnl(step="0.01") }} <br>
+                    {% for error in form.dailypnl.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td></td>
+            </tr>
+        </table>
+        <table id="tradelegs-form-container" style="table-layout: fixed; width: 60%">
+            {% for subform in form.legs %}
+                <tr id="leg-{{ loop.index0 }}-form" class="subform" data-index="{{ loop.index0 }}">
+                    {{ subform.hidden_tag() }}
+                    <td>{{ subform.opened.label }} :<br>{{ subform.opened() }}<br></td>
+                    <td>{{ subform.size.label }} :<br>{{ subform.size(min="1") }}<br></td>
+                    <td>{{ subform.contract_type.label }} :<br>{{ subform.contract_type() }}<br></td>
+                    <td>{{ subform.strike.label }} :<br>{{ subform.strike(min="0.00", step="0.01") }}<br></td>
+                    <td>{{ subform.expiry.label }} :<br>{{ subform.expiry() }}<br></td>
+                </tr>
+            {% endfor %}
+            </table>
+        <div>{{ form.submit() }}</div>
+    </form>
+    {% if form.errors %}
+        {{ form.errors }}
+    {% endif %}
+{% endblock content %}

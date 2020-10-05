@@ -2,8 +2,25 @@
 
 {% block content %}
     <h1>Hi, {{ current_user.username }}!</h1>
-    <h2>List of people:</h2>
-    {% for person in people %}
-        {{ person.name }} works in {{ person.field }}<br>
+    <h2>List of trades:</h2>
+    {% for trade in trades %}
+        <div class="trade-item" style="width: 80%">
+            <div class="trade-item header" style="display: flex; font: large; justify-content: space-between;">
+                <span class="trade-item header field">{{ trade.ticker }}</span>
+                <span class="trade-item header field">{{ trade.strategy }}</span>
+                <span class="trade-item header field">{{ trade.status }}</span>
+            </div>
+            <div class="trade-item legslist" style="padding-left: 30px;">
+                {% for leg in trade.legs %}
+                    <div class="trade-item leg" style="display: flex; justify-content: space-between;">
+                        <span class="trade-item leg field">{{ leg.opened }}</span>
+                        <span class="trade-item leg field">{{ leg.size }}</span>
+                        <span class="trade-item leg field">{{ leg.contract_type }}</span>
+                        <span class="trade-item leg field">@ ${{ leg.strike }}</span>
+                        <span class="trade-item leg field">to expire on {{ leg.expiry }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     {% endfor %}
 {% endblock content %}

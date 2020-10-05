@@ -9,10 +9,11 @@
     <body>
         <div>TradeTracker
             <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('addTrade') }}">Add new trade</a>
             {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Sign In</a>
+                <a href="{{ url_for('login') }}">Sign In</a>
             {% else %}
-            <a href="{{ url_for('logout') }}">Log Out</a>
+                <a href="{{ url_for('logout') }}">Log Out</a>
             {% endif %}
         </div>
         <hr>

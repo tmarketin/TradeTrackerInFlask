@@ -25,12 +25,15 @@ def addTrade():
             tradeStatus = "Closed"
         else:
             tradeStatus = "Open"
-        tradeStatus
+        if not formInstance.comment.data:
+            tradeComment = "N/A"
+        else:
+            tradeComment = formInstance.comment.data
         user = User.query.filter_by(username = current_user.username).first()
         newTrade = Trade(ticker = formInstance.ticker.data, playid = newPlayId, strategy = formInstance.strategy.data,\
             status = tradeStatus,\
             no_contracts = formInstance.no_contracts.data, no_legs = formInstance.no_legs.data,\
-            comment = formInstance.comment.data, open_date = formInstance.open_date.data,\
+            comment = tradeComment, open_date = formInstance.open_date.data,\
             open_premium = formInstance.open_premium.data, open_underlying = formInstance.open_underlying.data,\
             close_date = formInstance.close_date.data, close_premium = formInstance.close_premium.data,\
             close_underlying = formInstance.close_underlying.data, pnl = formInstance.pnl.data,\
@@ -39,7 +42,7 @@ def addTrade():
         for idx in range(formInstance.no_legs.data):
             entry = formInstance.legs.entries[idx]
             if not validateTradeLegEntry(entry):
-                flash("Trade leg input faulty")
+                flash("Trade leg input faulty", 'danger')
                 return redirect(url_for('addTrade'))
             tradeLegsForDb.append(TradeLeg(opened = entry.opened.data, size = entry.size.data,\
                 contract_type = entry.contract_type.data, strike = entry.strike.data, expiry = entry.expiry.data,\
@@ -48,7 +51,7 @@ def addTrade():
         for leg in tradeLegsForDb:
             db.session.add(leg)
         db.session.commit()
-        flash('Successful new trade created for ' + current_user.username)
+        flash('Successful new trade created for ' + current_user.username, 'success')
         return redirect(url_for('index'))
     return render_template('addTrade.html', title = 'Add new trade', form = formInstance)
 

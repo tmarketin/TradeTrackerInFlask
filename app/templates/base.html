@@ -1,31 +1,60 @@
-<html>
-    <head>
-      {% if title %}
-      <title>{{ title }} - Microblog</title>
-      {% else %}
-      <title>Welcome to Microblog</title>
-      {% endif %}
-    </head>
-    <body>
-        <div>TradeTracker
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('addTrade') }}">Add new trade</a>
-            {% if current_user.is_anonymous %}
-                <a href="{{ url_for('login') }}">Sign In</a>
-            {% else %}
-                <a href="{{ url_for('logout') }}">Log Out</a>
-            {% endif %}
-        </div>
-        <hr>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+    {% if title %}
+        <title>{{ title }}</title>
+    {% else %}
+        <title>Welcome to Microblog</title>
+    {% endif %}
+{% endblock title %}
+
+{% block navbar %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ url_for('index') }}">Trade Tracker</a>
+            </div>
+
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="active"><a href="{{ url_for('addTrade') }}">Add new trade</a></li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if current_user.is_anonymous %}
+                        <li><a href="{{ url_for('login') }}">Sign In</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('logout') }}">Sign Out</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="buffer" style="padding-top: 100px;"></div>
+    {% endblock navbar %}
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        <strong>{{ message }}</strong>
+                    </div>
+                {% endfor %}
             {% endif %}
         {% endwith %}
-        {% block content %}{% endblock %}
-    </body>
-</html>
+    </div>
+
+    <div class="container">
+        <div class="jumbotron">
+            {% block jumbotron_content %}{% endblock jumbotron_content %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="app_content">
+            {% block app_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock content %}
+

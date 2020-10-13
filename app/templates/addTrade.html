@@ -1,132 +1,166 @@
 {% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
+{% block title %}
+    TradeTracker - add new trade
+{% endblock title %}
+
+{% block jumbotron_content %}
+    <h2>We'll be adding new trades here</h2>
+{% endblock jumbotron_content %}
+
+{% block app_content %}
     <script src="{{url_for('static', filename='addTrade.js')}}"></script>
 
-    <h1>Hi, {{ current_user.username }}!</h1>
-    <h2>We'll be adding new trades here</h2>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <table style="table-layout: fixed; width: 40%">
-            <tr>
-                <td>
-                    {{ form.ticker.label}} :<br>{{ form.ticker(size=4) }} <br>
-                    {% for error in form.ticker.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-                <td>
-                    {{ form.playid.label}} :<br>{{ form.playid(size=10) }} <br>
-                </td>
-                <td>
-                    {{ form.strategy.label}} :<br>{{ form.strategy(size=64, onchange="displayTradeLegsFromStrategy()", list="id_datalist") }} <br>
-                    <datalist id="id_datalist">
-                        <option value="Long Call"></option>
-                        <option value="Long Put"></option>
-                        <option value="Cash Secured Put"></option>
-                        <option value="Covered Call"></option>
-                        <option value="Put Credit Spread"></option>
-                        <option value="Put Debit Spread"></option>
-                        <option value="Call Credit Spread"></option>
-                        <option value="Call Debit Spread"></option>
-                        <option value="Calendar Call Spread"></option>
-                        <option value="Calendar Put Spread"></option>
-                        <option value="Diagonal Spread"></option>
-                        <option value="Double Calendar Spread"></option>
-                    </datalist>
-                    {% for error in form.strategy.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.no_contracts.label}} :<br>{{ form.no_contracts(min="1") }} <br>
-                    {% for error in form.no_contracts.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-                <td>
-                    {{ form.no_legs.label}} :<br>{{ form.no_legs(min="1", max="4", onchange="displayTradeLegsFromNoLegs()") }} <br>
-                    {% for error in form.no_legs.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-                <td>
-                    {{ form.comment.label}} :<br>{{ form.comment() }} <br>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.open_date.label}} :<br>{{ form.open_date(onchange="calcPnl()") }} <br>
-                    {% for error in form.open_date.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-                <td>
-                    {{ form.open_premium.label}} :<br>{{ form.open_premium(step="0.01", onchange="calcPnl()") }} <br>
-                    {% for error in form.open_premium.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-                <td>
-                    {{ form.open_underlying.label}} :<br>{{ form.open_underlying(step="0.01", min="0.00") }} <br>
-                    {% for error in form.open_underlying.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.close_date.label}} :<br>{{ form.close_date(onchange="calcPnl()") }} <br>
-                    {% for error in form.close_date.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-                <td>
-                    {{ form.close_premium.label}} :<br>{{ form.close_premium(step="0.01", onchange="calcPnl()") }} <br>
-                    {% for error in form.close_premium.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-                <td>
-                    {{ form.close_underlying.label}} :<br>{{ form.close_underlying(step="0.01", min="0.00") }} <br>
-                    {% for error in form.close_underlying.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.pnl.label}} :<br>{{ form.pnl(step="0.01") }} <br>
-                    {% for error in form.pnl.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-                <td>
-                    {{ form.dailypnl.label}} :<br>{{ form.dailypnl(step="0.01") }} <br>
-                    {% for error in form.dailypnl.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </td>
-                <td></td>
-            </tr>
-        </table>
-        <table id="tradelegs-form-container" style="table-layout: fixed; width: 60%">
-            {% for subform in form.legs %}
-                <tr id="leg-{{ loop.index0 }}-form" class="subform" data-index="{{ loop.index0 }}">
-                    {{ subform.hidden_tag() }}
-                    <td>{{ subform.opened.label }} :<br>{{ subform.opened() }}<br></td>
-                    <td>{{ subform.size.label }} :<br>{{ subform.size(min="1") }}<br></td>
-                    <td>{{ subform.contract_type.label }} :<br>{{ subform.contract_type() }}<br></td>
-                    <td>{{ subform.strike.label }} :<br>{{ subform.strike(min="0.00", step="0.01") }}<br></td>
-                    <td>{{ subform.expiry.label }} :<br>{{ subform.expiry() }}<br></td>
+    <div class="container">
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <table style="table-layout: fixed; width: 80%; border-spacing: 0 10px;">
+                <tr>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        {{ form.ticker.label(class_="sr-only") }} {{ form.ticker(size="4", class_="form-control", placeholder="Input Ticker") }}
+                        {% for error in form.ticker.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        {{ form.playid.label(class_="sr-only") }} {{ form.playid(size=10, class_="form-control", placeholder="Trade ID") }}
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        {{ form.strategy.label(class_="sr-only") }} {{ form.strategy(size=64, onchange="displayTradeLegsFromStrategy()", list="id_datalist", class_="form-control", placeholder="Trade Strategy") }}
+                        <datalist id="id_datalist">
+                            <option value="Long Call"></option>
+                            <option value="Long Put"></option>
+                            <option value="Cash Secured Put"></option>
+                            <option value="Covered Call"></option>
+                            <option value="Put Credit Spread"></option>
+                            <option value="Put Debit Spread"></option>
+                            <option value="Call Credit Spread"></option>
+                            <option value="Call Debit Spread"></option>
+                            <option value="Calendar Call Spread"></option>
+                            <option value="Calendar Put Spread"></option>
+                            <option value="Diagonal Spread"></option>
+                            <option value="Double Calendar Spread"></option>
+                        </datalist>
+                        {% for error in form.strategy.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
                 </tr>
-            {% endfor %}
+                <tr>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        {{ form.no_contracts.label(class_="sr-only") }} {{ form.no_contracts(min="1", class_="form-control", placeholder="# contracts") }}
+                        {% for error in form.no_contracts.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        {{ form.no_legs.label(class_="sr-only") }} {{ form.no_legs(min="1", max="4", onchange="displayTradeLegsFromNoLegs()", class_="form-control", placeholder="# legs") }}
+                        {% for error in form.no_legs.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        {{ form.comment.label(class_="sr-only") }} {{ form.comment(class_="form-control", placeholder="Add insightful comment here") }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        {{ form.open_date.label(class_="sr-only") }} {{ form.open_date(onchange="calcPnl()", class_="form-control", placeholder="Open date") }}
+                        {% for error in form.open_date.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="open-premium-addon">$</span>
+                            {{ form.open_premium.label(class_="sr-only") }} {{ form.open_premium(step="0.01", onchange="calcPnl()", class_="form-control", placeholder="Open premium") }}
+                        </div>
+                        {% for error in form.open_premium.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="open-underlying-addon">$</span>
+                            {{ form.open_underlying.label(class_="sr-only") }} {{ form.open_underlying(step="0.01", min="0.00", class_="form-control", placeholder="Underlying @ open") }}
+                        </div> 
+                        {% for error in form.open_underlying.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        {{ form.close_date.label(class_="sr-only") }} {{ form.close_date(onchange="calcPnl()", class_="form-control") }}
+                        {% for error in form.close_date.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="close-premium-addon">$</span>
+                            {{ form.close_premium.label(class_="sr-only") }} {{ form.close_premium(step="0.01", onchange="calcPnl()", class_="form-control", placeholder="Close premium") }}
+                        </div>
+                        {% for error in form.close_premium.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="close-underlying-addon">$</span>
+                            {{ form.close_underlying.label(class_="sr-only") }} {{ form.close_underlying(step="0.01", min="0.00", class_="form-control", placeholder="Underlying @ close") }}
+                        </div>
+                        {% for error in form.close_underlying.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="pnl-addon">$</span>
+                            {{ form.pnl.label(class_="sr-only") }} {{ form.pnl(step="0.01", class_="form-control", placeholder="P/L") }}
+                        </div>
+                        {% for error in form.pnl.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px;">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="dailypnl-addon">$</span>
+                            {{ form.dailypnl.label(class_="sr-only") }} {{ form.dailypnl(step="0.01", class_="form-control", placeholder="Daily P/L") }}
+                        </div>
+                        {% for error in form.dailypnl.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </td>
+                    <td></td>
+                </tr>
             </table>
-        <div>{{ form.submit() }}</div>
-    </form>
+            <table id="tradelegs-form-container" style="table-layout: fixed; width: 80%; border-spacing: 0 5px;">
+                {% for subform in form.legs %}
+                    <tr id="leg-{{ loop.index0 }}-form" class="subform" data-index="{{ loop.index0 }}">
+                        {{ subform.hidden_tag() }}
+                        <td style="padding-left: 10px; padding-right: 10px;">{{ subform.opened.label(class_="sr-only") }} {{ subform.opened(class_="form-control") }}</td>
+                        <td style="padding-left: 10px; padding-right: 10px;">{{ subform.size.label(class_="sr-only") }} {{ subform.size(min="1", class_="form-control", placeholder="# contracts") }}</td>
+                        <td style="padding-left: 10px; padding-right: 10px;">{{ subform.contract_type.label(class_="sr-only") }} {{ subform.contract_type(class_="form-control") }}</td>
+                        <td style="padding-left: 10px; padding-right: 10px;">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="leg-{{ loop.index0 }}-strike-addon">$</span>
+                                    {{ subform.strike.label(class_="sr-only") }} {{ subform.strike(min="0.00", step="0.01", class_="form-control", placeholder="Strike") }}
+                                </div>
+                        </td>
+                        <td style="padding-left: 10px; padding-right: 10px;">{{ subform.expiry.label(class_="sr-only") }} {{ subform.expiry(class_="form-control") }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td style="padding-left: 10px; padding-right: 10px">{{ form.submit(class_="btn btn-primary") }}</td>
+                </tr>
+            </table>
+        </form>
+    </div>
     {% if form.errors %}
         {{ form.errors }}
     {% endif %}
-{% endblock content %}
+{% endblock app_content %}

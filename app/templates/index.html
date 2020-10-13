@@ -1,26 +1,56 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block title %}
+    TradeTracker - list of trades
+{% endblock title %}
+
+{% block jumbotron_content %}
     <h1>Hi, {{ current_user.username }}!</h1>
-    <h2>List of trades:</h2>
+    <h2>This is a list of all the trades...</h2>
+{% endblock jumbotron_content %}
+
+{% block app_content %}
+    <script src="{{url_for('static', filename='index.js')}}"></script>
+
     {% for trade in trades %}
-        <div class="trade-item" style="width: 80%">
-            <div class="trade-item header" style="display: flex; font: large; justify-content: space-between;">
-                <span class="trade-item header field">{{ trade.ticker }}</span>
-                <span class="trade-item header field">{{ trade.strategy }}</span>
-                <span class="trade-item header field">{{ trade.status }}</span>
+        {% if trade.status == "Open" %}
+            <div class="panel panel-warning">        
+        {% elif trade.pnl|float() >= "0.0"|float() %}
+            <div class="panel panel-success">
+        {% else %}
+            <div class="panel panel-danger">
+        {% endif %}
+            <div id="panel-{{ loop.index0 }}-heading" class="panel-heading" onclick="toggleDisplay(this.id)">
+                <h3 class="panel-title">
+                    <table style="table-layout: fixed; width: 100%;">
+                        <tr>
+                            <td style="float: left;">{{ trade.ticker }}</td>
+                            <td style="float: right">{{ trade.strategy }}</td>
+                        </tr>
+                    </table>
+                </h3>
             </div>
-            <div class="trade-item legslist" style="padding-left: 30px;">
+            <div id="panel-{{ loop.index0 }}-body" class="panel-body" style="display: none;">
+                <div class="trade-item body">
+                    <p>Trade opened on {{ trade.open_date }}, for ${{ trade.open_premium }} with underlying at ${{ trade.open_underlying}}</p>
+                    {% if trade.status != "Open" %}
+                        <p>Trade closed on {{ trade.close_date }}, for ${{ trade.close_premium }} with underlying at ${{ trade.close_underlying }}</p>
+                        <p>Final P&L is ${{ trade.pnl }}, and daily P&L is ${{ trade.dailypnl }}</p>
+                    {% endif %}
+                    <div class="well well-sm">{{ trade.comment }}</div>
+                </div>
+                <table class="table">
                 {% for leg in trade.legs %}
-                    <div class="trade-item leg" style="display: flex; justify-content: space-between;">
-                        <span class="trade-item leg field">{{ leg.opened }}</span>
-                        <span class="trade-item leg field">{{ leg.size }}</span>
-                        <span class="trade-item leg field">{{ leg.contract_type }}</span>
-                        <span class="trade-item leg field">@ ${{ leg.strike }}</span>
-                        <span class="trade-item leg field">to expire on {{ leg.expiry }}</span>
-                    </div>
+                    <tr class="trade-item leg row">
+                        <td class="trade-item leg field">{{ leg.opened }}</td>
+                        <td class="trade-item leg field">{{ leg.size }}</td>
+                        <td class="trade-item leg field">{{ leg.contract_type }}</td>
+                        <td class="trade-item leg field">@ ${{ leg.strike }}</td>
+                        <td class="trade-item leg field">to expire on {{ leg.expiry }}</td>
+                </tr>
                 {% endfor %}
+                </table>
             </div>
         </div>
     {% endfor %}
-{% endblock content %}
+{% endblock app_content %}

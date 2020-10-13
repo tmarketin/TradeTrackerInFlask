@@ -24,17 +24,30 @@
                 <h3 class="panel-title">
                     <table style="table-layout: fixed; width: 100%;">
                         <tr>
-                            <td style="float: left;">{{ trade.ticker }}</td>
-                            <td style="float: right">{{ trade.strategy }}</td>
+                            <td style="text-align: left;">{{ trade.ticker }} ({{ trade.playid }})</td>
+                            <td style="text-align: right">{{ trade.strategy }}</td>
+                            <td style="text-align: right">
+                                <button type="button" class="btn btn-primary">Edit</button>
+                                <button type="button" class="btn btn-warning">Roll</button>
+                                <button type="button" class="btn btn-danger">Delete</button>
+                            </td>
                         </tr>
                     </table>
                 </h3>
             </div>
             <div id="panel-{{ loop.index0 }}-body" class="panel-body" style="display: none;">
                 <div class="trade-item body">
-                    <p>Trade opened on {{ trade.open_date }}, for ${{ trade.open_premium }} with underlying at ${{ trade.open_underlying}}</p>
+                    <p>Trade opened on {{ trade.open_date }}, for ${{ trade.open_premium }}
+                    {% if trade.open_underlying %}
+                        with underlying at ${{ trade.open_underlying}}
+                    {% endif %}
+                    </p>
                     {% if trade.status != "Open" %}
-                        <p>Trade closed on {{ trade.close_date }}, for ${{ trade.close_premium }} with underlying at ${{ trade.close_underlying }}</p>
+                        <p>Trade closed on {{ trade.close_date }}, for ${{ trade.close_premium }}
+                        {% if trade.close_underlying %}
+                            with underlying at ${{ trade.close_underlying }}
+                        {% endif %}
+                        </p>
                         <p>Final P&L is ${{ trade.pnl }}, and daily P&L is ${{ trade.dailypnl }}</p>
                     {% endif %}
                     <div class="well well-sm">{{ trade.comment }}</div>
@@ -42,7 +55,7 @@
                 <table class="table">
                 {% for leg in trade.legs %}
                     <tr class="trade-item leg row">
-                        <td class="trade-item leg field">{{ leg.opened }}</td>
+                        <td class="trade-item leg field" style="padding-left: 60px;">{{ leg.opened }}</td>
                         <td class="trade-item leg field">{{ leg.size }}</td>
                         <td class="trade-item leg field">{{ leg.contract_type }}</td>
                         <td class="trade-item leg field">@ ${{ leg.strike }}</td>

@@ -20,6 +20,7 @@ function displayTradeLegsFromStrategy() {
         case "Calendar Call Spread":
         case "Calendar Put Spread":
         case "Diagonal Spread":
+        case "Diagonal Spread (PMCC)":
             document.getElementById("no_legs").value = 2;
 
             document.getElementById("leg-1-form").style.visibility = "visible";
@@ -96,5 +97,11 @@ function calcPnl() {
                 document.getElementById('dailypnl').value = '';
             }
         }
+        else {
+            document.getElementById('dailypnl').value = '';
+        }
+    }
+    else {
+        document.getElementById('pnl').value = '';
     }
 }

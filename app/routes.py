@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
-from app.utils_routes import getPlayId, validateTradeLegEntry
+import app.utils_routes as rhelp
 
 @appInstance.route('/')
 @appInstance.route('/index')
@@ -20,15 +20,9 @@ def index():
 def addTrade():
     formInstance = TradeForm()
     if formInstance.validate_on_submit():
-        newPlayId = getPlayId(formInstance.playid.data, formInstance.ticker.data)
-        if formInstance.close_date.data and formInstance.close_premium.data:
-            tradeStatus = "Closed"
-        else:
-            tradeStatus = "Open"
-        if not formInstance.comment.data:
-            tradeComment = "N/A"
-        else:
-            tradeComment = formInstance.comment.data
+        newPlayId = rhelp.getPlayId(formInstance.playid.data, formInstance.ticker.data)
+        tradeStatus = rhelp.getTradeStatus(formInstance.close_date.data, formInstance.close_premium.data)
+        tradeComment = rhelp.getTradeComment(formInstance.comment.data)
         user = User.query.filter_by(username = current_user.username).first()
         newTrade = Trade(ticker = formInstance.ticker.data, playid = newPlayId, strategy = formInstance.strategy.data,\
             status = tradeStatus,\
@@ -41,7 +35,7 @@ def addTrade():
         tradeLegsForDb = []
         for idx in range(formInstance.no_legs.data):
             entry = formInstance.legs.entries[idx]
-            if not validateTradeLegEntry(entry):
+            if not rhelp.validateTradeLegEntry(entry):
                 flash("Trade leg input faulty", 'danger')
                 return redirect(url_for('addTrade'))
             tradeLegsForDb.append(TradeLeg(opened = entry.opened.data, size = entry.size.data,\
@@ -54,6 +48,32 @@ def addTrade():
         flash('Successful new trade created for ' + current_user.username, 'success')
         return redirect(url_for('index'))
     return render_template('addTrade.html', title = 'Add new trade', form = formInstance)
+
+@appInstance.route('/edit/<id>', methods = ['GET', 'POST'])
+@login_required
+def edit(id):
+    formInstance = TradeForm()
+    trade = Trade.query.filter_by(playid = id).first()
+    # fill out form fields with existing data
+    if request.method == 'GET':
+        rhelp.populateTradeForm(formInstance, trade)
+    if formInstance.validate_on_submit():
+        rhelp.editTradeFromForm(formInstance, trade)
+        db.session.commit()
+        flash('Successful edit of ' + trade.ticker, 'success')
+        return redirect(url_for('index'))
+    return render_template('editTrade.html', playid = id, form = formInstance)
+
+@appInstance.route('/delete/<id>')
+@login_required
+def delete(id):
+    trade = Trade.query.filter_by(playid = id).first()
+    legs = trade.legs.all()
+    for leg in legs:
+        db.session.delete(leg)
+    db.session.delete(trade)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 @appInstance.route('/login', methods = ['GET', 'POST'])
 def login():

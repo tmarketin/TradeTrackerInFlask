@@ -12,7 +12,7 @@ import app.utils_routes as rhelp
 @login_required
 def index():
     user = User.query.filter_by(username = current_user.username).first()
-    trades = user.trades.all()
+    trades = user.trades.order_by(Trade.open_date.desc()).all()
     return render_template('index.html', title="Home", trades=trades)
 
 @appInstance.route('/addTrade', methods = ['GET', 'POST'])

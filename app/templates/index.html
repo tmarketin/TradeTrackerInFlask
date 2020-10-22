@@ -45,23 +45,37 @@
                 </h3>
             </div>
             <div id="panel-{{ loop.index0 }}-body" class="panel-body" style="display: none;">
-                <div class="trade-item body">
-                    <p>Trade opened on {{ trade.open_date }}, for ${{ trade.open_premium }}
-                    {% if trade.open_underlying %}
-                        with underlying at ${{ trade.open_underlying}}
-                    {% endif %}
-                    </p>
-                    {% if trade.status != "Open" %}
-                        <p>Trade closed on {{ trade.close_date }}, for ${{ trade.close_premium }}
-                        {% if trade.close_underlying %}
-                            with underlying at ${{ trade.close_underlying }}
-                        {% endif %}
-                        </p>
-                        <p>Final P&L is ${{ trade.pnl }}, and daily P&L is ${{ trade.dailypnl }}</p>
-                    {% endif %}
-                    <div class="well well-sm">{{ trade.comment }}</div>
-                </div>
-                <table class="table">
+                <table style="table-layout: fixed; width: 100%;">
+                    <tr>
+                        <td style="text-align: left;">
+                            <p>Trade opened on <span style="font-weight: bold;">{{ trade.open_date }}</span>, for <span style="font-weight: bold;">${{ trade.open_premium }}</span>
+                                {% if trade.open_underlying %}
+                                    with underlying at <span style="font-weight: bold;">${{ trade.open_underlying}}</span>
+                                {% endif %}
+                            </p>
+                        </td>
+                        <td style="text-align: right;">
+                            {% if trade.status != "Open" %}
+                            <p>Trade closed on <span style="font-weight: bold;">{{ trade.close_date }}</span>, for <span style="font-weight: bold;">${{ trade.close_premium }}</span>
+                                {% if trade.close_underlying %}
+                                    with underlying at <span style="font-weight: bold;">${{ trade.close_underlying }}</span>
+                                {% endif %}
+                            </p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><div class="well well-sm">{{ trade.comment }}</div></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">
+                            <p>Final total P&L is <span style="font-weight: bold;">${{ trade.pnl }}</span>, and daily P&L is <span style="font-weight: bold;">${{ trade.dailypnl }}</span></p>
+                        </td>
+                        <td style="text-align: right;">
+                        </td>
+                    </tr>
+            </table>
+            <table class="table">
                 {% for leg in trade.legs %}
                     <tr class="trade-item leg row">
                         <td class="trade-item leg field" style="padding-left: 60px;">{{ leg.opened }}</td>

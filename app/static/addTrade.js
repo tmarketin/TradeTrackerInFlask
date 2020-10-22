@@ -72,12 +72,13 @@ function displayTradeLegsFromNoLegs() {
 function calcPnl() {
     let oPrem = document.getElementById("open_premium").value;
     let cPrem = document.getElementById("close_premium").value;
+    let noContracts = parseInt(document.getElementById("no_contracts").value);
     let oDate = new Date(document.getElementById("open_date").value);
     let cDate = new Date(document.getElementById("close_date").value);
 
     console.log("calcPnl function called");
     if ((! [undefined, null, ''].includes(oPrem)) && (! [undefined, null, ''].includes(cPrem))) {
-        let pnl = parseFloat(oPrem) + parseFloat(cPrem);
+        let pnl = (parseFloat(oPrem) + parseFloat(cPrem))*noContracts;
         document.getElementById('pnl').value = pnl.toFixed(2);
 
         console.log("odate: " + oDate);

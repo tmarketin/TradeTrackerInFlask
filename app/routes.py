@@ -1,5 +1,5 @@
 from app import appInstance, db
-from app.forms import LoginForm, RegistrationForm, TradeForm
+from app.forms import LoginForm, RegistrationForm, TradeForm, RollForm
 from app.models import User, Trade, TradeLeg
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
@@ -63,6 +63,31 @@ def edit(id):
         flash('Successful edit of ' + trade.ticker, 'success')
         return redirect(url_for('index'))
     return render_template('editTrade.html', playid = id, form = formInstance)
+
+@appInstance.route('/roll/<id>', methods = ['GET', 'POST'])
+@login_required
+def roll(id):
+    formInstance = RollForm()
+    trade = Trade.query.filter_by(playid = id).first()
+    if request.method == 'GET':
+        rhelp.populateRollForm(formInstance, trade)
+    if formInstance.validate_on_submit():
+        trade.comment = rhelp.getTradeComment(formInstance.comment.data)
+        trade.open_premium = round(trade.open_premium + float(formInstance.roll_premium.data), 2)
+        tradeLegsForDb = []
+        for idx in range(trade.no_legs):
+            entry = formInstance.legs.entries[idx]
+            if not rhelp.validateTradeLegEntry(entry):
+                flash("Trade leg input faulty", 'danger')
+                return redirect(url_for('index')) # TODO: redirect to same roll page
+            tradeLegsForDb.append(TradeLeg(opened = entry.opened.data, size = entry.size.data,\
+                contract_type = entry.contract_type.data, strike = entry.strike.data, expiry = entry.expiry.data,\
+                trade = trade))
+        for leg in tradeLegsForDb:
+            db.session.add(leg)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('rollTrade.html', playid = id, form = formInstance)
 
 @appInstance.route('/delete/<id>')
 @login_required

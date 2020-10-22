@@ -31,7 +31,7 @@ class Trade(db.Model):
     status = db.Column(db.String(6))
     no_contracts = db.Column(db.Integer)
     no_legs = db.Column(db.Integer)
-    comment = db.Column(db.String(256), nullable = True)
+    comment = db.Column(db.String(256), nullable = True) # TODO: expand to 2000 characters
     pnl = db.Column(db.Float(), nullable = True)
     dailypnl = db.Column(db.Float(), nullable = True)
     open_date = db.Column(db.Date, index = True, default = date.today)

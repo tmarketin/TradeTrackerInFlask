@@ -52,3 +52,16 @@ class TradeForm(FlaskForm):
     legs = FieldList(FormField(TradeLegForm), min_entries = 4, max_entries = 4)
     submit = SubmitField('Submit')
 """ should validate close_premium based on if close_date is known"""
+
+class RollForm(FlaskForm):
+    ticker = StringField('Ticker', validators = [Optional()])
+    playid = StringField('Trade ID', validators = [Optional()])
+    strategy = StringField('Strategy', validators = [Optional()])
+    no_contracts = IntegerField('Number of contracts', validators = [Optional()])
+    no_legs = IntegerField('Number of legs', validators = [Optional()])
+    comment = TextAreaField('Comment', validators = [Optional()])
+    open_date = DateField('Date opened', validators = [Optional()])
+    open_premium = DecimalField('Opening premium', validators = [Optional()], places = 2)
+    roll_premium = DecimalField('Opening premium', validators = [DataRequired()], places = 2)
+    legs = FieldList(FormField(TradeLegForm), min_entries = 4, max_entries = 4)
+    submit = SubmitField('Submit')

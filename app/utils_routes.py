@@ -55,7 +55,7 @@ def getTradeComment(comment):
     return tradeComment
 
 def populateTradeForm(formInstance, trade):
-    """ when editing a trade, populates the form with values from db"""
+    """ when editing a trade, prepopulates the form with values from db """
     formInstance.ticker.data = trade.ticker
     formInstance.playid.data = trade.playid
     formInstance.strategy.data = trade.strategy
@@ -76,6 +76,24 @@ def populateTradeForm(formInstance, trade):
         formInstance.legs.entries[idx].contract_type.data = trade.legs[idx].contract_type
         formInstance.legs.entries[idx].strike.data = trade.legs[idx].strike
         formInstance.legs.entries[idx].expiry.data = trade.legs[idx].expiry
+
+def populateRollForm(form, trade):
+    """ when rolling a trade, prepopulates the form with values from db """
+    form.ticker.data = trade.ticker
+    form.playid.data = trade.playid
+    form.strategy.data = trade.strategy
+    form.no_contracts.data = trade.no_contracts
+    form.no_legs.data = trade.no_legs
+    form.comment.data = trade.comment
+    form.open_date.data = trade.open_date
+    form.open_premium.data = trade.open_premium
+    for idx in range(trade.no_legs):
+        legIdx = len(trade.legs.all()) - trade.no_legs + idx
+        form.legs.entries[idx].opened.data = trade.legs[legIdx].opened
+        form.legs.entries[idx].size.data = trade.legs[legIdx].size
+        form.legs.entries[idx].contract_type.data = trade.legs[legIdx].contract_type
+        form.legs.entries[idx].strike.data = trade.legs[legIdx].strike
+        form.legs.entries[idx].expiry.data = trade.legs[legIdx].expiry
 
 def refreshTradeFromForm(trade, formInstance):
     trade.ticker = formInstance.ticker.data

@@ -38,7 +38,14 @@
                                 {% else %}
                                     <a href="{{ url_for('roll', id=trade.playid) }}"><button type="button" class="btn btn-warning">Roll</button></a>
                                 {% endif %}
-                                <a href="{{ url_for('delete', id=trade.playid) }}"><button type="button" class="btn btn-danger">Delete</button></a>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Confirm delete<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ url_for('delete', id=trade.playid) }}">Delete</a></li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     </table>

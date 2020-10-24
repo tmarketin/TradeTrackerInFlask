@@ -15,6 +15,14 @@ def index():
     trades = user.trades.order_by(Trade.open_date.desc()).all()
     return render_template('index.html', title="Home", trades=trades)
 
+@appInstance.route('/statistics')
+@login_required
+def statistics():
+    user = User.query.filter_by(username = current_user.username).first()
+    trades = user.trades.order_by(Trade.open_date.desc()).all()
+    stats = rhelp.getStats(trades)
+    return render_template('statistics.html', stats = stats)
+
 @appInstance.route('/addTrade', methods = ['GET', 'POST'])
 @login_required
 def addTrade():

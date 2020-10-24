@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from app import db
 from app.models import Trade, TradeLeg
 
@@ -142,3 +144,34 @@ def editTradeFromForm(formInstance, trade):
                     expiry = formInstance.legs.entries[idx].expiry.data,\
                     trade = trade)
                 db.session.add(tradeLeg)
+
+def getStats(trades):
+    stats = defaultdict(lambda: 0)
+    stats['countByStrat'] = defaultdict(lambda: 0)
+    stats['countByTicker'] = defaultdict(lambda: 0)
+    stats['pnlByStrat'] = defaultdict(lambda: 0)
+    stats['pnlByTicker'] = defaultdict(lambda: 0)
+    for trade in trades:
+        stats['countTotalTrades'] += 1
+        if trade.status == "Open":
+            stats['countOpenTrades'] += 1
+            if trade.open_premium > 0:
+                stats['openCredit'] += trade.open_premium
+            else:
+                stats['openDebit'] -= trade.open_premium
+        else:
+            stats['countClosedTrades'] += 1
+            stats['pnlTotal'] += trade.pnl
+            stats['pnlByStrat'][trade.strategy] += trade.pnl
+            stats['pnlByTicker'][trade.ticker] += trade.pnl
+            if trade.pnl > 0.0:
+                stats['countWinningTrades'] += 1
+                stats['pnlGains'] += trade.pnl
+            else:
+                stats['countLosingTrades'] += 1
+                stats['pnlLosses'] -= trade.pnl
+        stats['countByStrat'][trade.strategy] += 1
+        stats['countByTicker'][trade.ticker] += 1
+    
+    return stats
+        

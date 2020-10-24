@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+    TradeTracker - performance statistics
+{% endblock title %}
+
+{% block jumbotron_content %}
+    <h3>Doing statistics</h3>
+{% endblock jumbotron_content %}
+
+{% block app_content %}
+    <p>Total number of trades: {{ stats["countTotalTrades"] }}</p>
+    <p>Open trades: {{ stats["countOpenTrades"] }}</p>
+    <p>Closed trades: {{ stats["countClosedTrades"] }}</p>
+    <p>Winning trades: {{ stats["countWinningTrades"] }}</p>
+    <p>Losing trades: {{ stats["countLosingTrades"] }}</p>
+    <p>Current total P/L: ${{ stats["pnlTotal"] }}</p>
+    <p>Total gains: ${{ stats["pnlGains"] }}</p>
+    <p>Total losses: ${{ stats["pnlLosses"] }}</p>
+    <p>Current open credit: ${{ stats["openCredit"] }}</p>
+    <p>Current open debit: ${{ stats["openDebit"] }}</p>
+    <p>Counts by strategy</p>
+    <ul>
+        {% for key, value in stats["countByStrat"].items() %}
+            <li>{{ key }} : {{ value }}</li>            
+        {% endfor %}
+    </ul>
+    <p>Counts by ticker</p>
+    <ul>
+        {% for key, value in stats["countByTicker"].items() %}
+            <li>{{ key }} : {{ value }}</li>            
+        {% endfor %}
+    </ul>
+    <p>P/L by strategy</p>
+    <ul>
+        {% for key, value in stats["pnlByStrat"].items() %}
+            <li>{{ key }} : ${{ value }}</li>            
+        {% endfor %}
+    </ul>
+    <p>P/L by ticker</p>
+    <ul>
+        {% for key, value in stats["pnlByTicker"].items() %}
+            <li>{{ key }} : ${{ value }}</li>            
+        {% endfor %}
+    </ul>
+{% endblock app_content %}

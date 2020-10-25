@@ -12,6 +12,13 @@
 {% block app_content %}
     <script src="{{url_for('static', filename='index.js')}}"></script>
 
+    <ul class="nav nav-pills" style="padding-bottom: 30px;">
+        <li id="filterButtonAll" role="presentation" class="active" onclick="filterAllTrades()"><a href="#">All</a></li>
+        <li id="filterButtonOpen" role="presentation" onclick="filterOpenTrades()"><a href="#">Open</a></li>
+        <li id="filterButtonWins" role="presentation" onclick="filterWinningTrades()"><a href="#">Wins</a></li>
+        <li id="filterButtonLosses" role="presentation" onclick="filterLosingTrades()"><a href="#">Losses</a></li>
+      </ul>
+
     {% for trade in trades %}
         {% if trade.status == "Open" %}
             <div class="panel panel-warning">        

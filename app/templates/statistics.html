@@ -20,28 +20,20 @@
     <p>Total losses: ${{ stats["pnlLosses"] }}</p>
     <p>Current open credit: ${{ stats["openCredit"] }}</p>
     <p>Current open debit: ${{ stats["openDebit"] }}</p>
-    <p>Counts by strategy</p>
-    <ul>
-        {% for key, value in stats["countByStrat"].items() %}
-            <li>{{ key }} : {{ value }}</li>            
-        {% endfor %}
-    </ul>
-    <p>Counts by ticker</p>
-    <ul>
-        {% for key, value in stats["countByTicker"].items() %}
-            <li>{{ key }} : {{ value }}</li>            
-        {% endfor %}
-    </ul>
-    <p>P/L by strategy</p>
-    <ul>
-        {% for key, value in stats["pnlByStrat"].items() %}
-            <li>{{ key }} : ${{ value }}</li>            
-        {% endfor %}
-    </ul>
-    <p>P/L by ticker</p>
-    <ul>
-        {% for key, value in stats["pnlByTicker"].items() %}
-            <li>{{ key }} : ${{ value }}</li>            
-        {% endfor %}
-    </ul>
+    <div class="figureCountsByStrat">
+        <table>
+            <tr>
+                <td>{{ figureCountsByStrat | safe }}</td>
+                <td>{{ figurePnlByStrategy | safe }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="figureCountsByTicker">
+        <table>
+            <tr>
+                <td>{{ figureCountsByTicker | safe }}</td>
+                <td>{{ figurePnlByTicker | safe }}</td>
+            </tr>
+        </table>
+    </div>
 {% endblock app_content %}

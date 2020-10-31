@@ -3,6 +3,10 @@ from collections import defaultdict
 from app import db
 from app.models import Trade, TradeLeg
 
+from bokeh.plotting import figure
+from bokeh.resources import CDN
+from bokeh.embed import file_html
+
 def getTradeIdNum(playid):
     [ticker, pid] = playid.split('-')
     return int(pid)
@@ -152,9 +156,16 @@ def getStats(trades):
     stats['pnlByStrat'] = defaultdict(lambda: 0)
     stats['pnlByTicker'] = defaultdict(lambda: 0)
     for trade in trades:
+        if not trade.strategy in stats['countByStrat']:
+            stats['countByStrat'][trade.strategy] = defaultdict(lambda: 0)
+        if not trade.ticker in stats['countByTicker']:
+            stats['countByTicker'][trade.ticker] = defaultdict(lambda: 0)
         stats['countTotalTrades'] += 1
         if trade.status == "Open":
             stats['countOpenTrades'] += 1
+            stats['countByStratOpen'] += 1
+            stats['countByStrat'][trade.strategy]['Open'] += 1
+            stats['countByTicker'][trade.ticker]['Open'] += 1
             if trade.open_premium > 0:
                 stats['openCredit'] += trade.open_premium
             else:
@@ -167,11 +178,57 @@ def getStats(trades):
             if trade.pnl > 0.0:
                 stats['countWinningTrades'] += 1
                 stats['pnlGains'] += trade.pnl
+                stats['countByStrat'][trade.strategy]['Win'] += 1
+                stats['countByTicker'][trade.ticker]['Win'] += 1
             else:
                 stats['countLosingTrades'] += 1
                 stats['pnlLosses'] -= trade.pnl
-        stats['countByStrat'][trade.strategy] += 1
-        stats['countByTicker'][trade.ticker] += 1
+                stats['countByStrat'][trade.strategy]['Loss'] += 1
+                stats['countByTicker'][trade.ticker]['Loss'] += 1
     
     return stats
-        
+
+def getCountByStratChart(data, chartName):
+    keys = []
+    countOpen = []
+    countWin = []
+    countLoss = []
+    for key, value in data.items():
+        keys.append(key)
+        countOpen.append(value["Open"])
+        countWin.append(value["Win"])
+        countLoss.append(value["Loss"])
+
+    labels = ["Open", "Wins", "Losses"]
+    colors = ["#ffc300", "#8bc34a", "#ff5733"]
+    data = {
+        'strategies' : keys,
+        'Open' : countOpen,
+        'Wins' : countWin, 
+        'Losses' : countLoss
+    }
+    plot = figure(x_range = keys, plot_height = 250, title = chartName, toolbar_location = None, tools = "")
+    plot.vbar_stack(labels, x = 'strategies', width = 0.9, color = colors, source = data, legend_label = labels)
+
+    plot.y_range.start = 0
+    plot.x_range.range_padding = 0.1
+    plot.xgrid.grid_line_color = None
+    plot.axis.minor_tick_line_color = None
+    plot.outline_line_color = None
+    plot.legend.location = 'top_left'
+    plot.legend.orientation = 'vertical'
+
+    return file_html(plot, CDN)
+
+def getBarChart(data, chartName):
+    keys = []
+    values = []
+    for key, value in data.items():
+        keys.append(key)
+        values.append(value)
+    plot = figure(x_range = keys, plot_height = 250, title = chartName, toolbar_location = None, tools = "")
+    plot.vbar(x = keys, top = values, width = 0.9)
+    plot.xgrid.grid_line_color = None
+    #plot.y_range.start = 0
+    return file_html(plot, CDN)
+  

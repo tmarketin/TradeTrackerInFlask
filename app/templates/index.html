@@ -83,7 +83,9 @@
                     </tr>
                     <tr>
                         <td style="text-align: left;">
+                            {% if trade.status != "Open" %}
                             <p>Final total P&L is <span style="font-weight: bold;">${{ trade.pnl }}</span>, and daily P&L is <span style="font-weight: bold;">${{ trade.dailypnl }}</span></p>
+                            {% endif %}
                         </td>
                         <td style="text-align: right;">
                         </td>

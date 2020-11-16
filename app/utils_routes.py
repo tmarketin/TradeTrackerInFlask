@@ -77,11 +77,12 @@ def populateTradeForm(formInstance, trade):
     formInstance.pnl.data = trade.pnl
     formInstance.dailypnl.data = trade.dailypnl
     for idx in range(formInstance.no_legs.data):
-        formInstance.legs.entries[idx].opened.data = trade.legs[idx].opened
-        formInstance.legs.entries[idx].size.data = trade.legs[idx].size
-        formInstance.legs.entries[idx].contract_type.data = trade.legs[idx].contract_type
-        formInstance.legs.entries[idx].strike.data = trade.legs[idx].strike
-        formInstance.legs.entries[idx].expiry.data = trade.legs[idx].expiry
+        legIdx = len(trade.legs.all()) - trade.no_legs + idx
+        formInstance.legs.entries[idx].opened.data = trade.legs[legIdx].opened
+        formInstance.legs.entries[idx].size.data = trade.legs[legIdx].size
+        formInstance.legs.entries[idx].contract_type.data = trade.legs[legIdx].contract_type
+        formInstance.legs.entries[idx].strike.data = trade.legs[legIdx].strike
+        formInstance.legs.entries[idx].expiry.data = trade.legs[legIdx].expiry
 
 def populateRollForm(form, trade):
     """ when rolling a trade, prepopulates the form with values from db """

@@ -108,13 +108,14 @@
                 <h3 class="panel-title">
                     <table style="table-layout: fixed; width: 100%;">
                         <tr>
-                            <td style="text-align: left;">{{ trade.ticker }} ({{ trade.playid }})</td>
+                            <td style="text-align: left;">
+                                <span class="panel-heading-ticker">{{ trade.ticker }}</span> ({{ trade.playid }})</td>
                             {% if trade.no_contracts == 1 %}
                                 <td style="text-align: right;">{{ trade.no_contracts }} contract</td>
                             {% else %}
                                 <td style="text-align: right;">{{ trade.no_contracts }} contracts</td>
                             {% endif %}
-                            <td style="text-align: right">{{ trade.strategy }}</td>
+                            <td class="panel-heading-strategy" style="text-align: right">{{ trade.strategy }}</td>
                             <td style="text-align: right">
                                 <a href="{{ url_for('edit', id=trade.playid) }}"><button type="button" class="btn btn-primary">Edit</button></a>
                                 {% if trade.status == "Closed" %}
@@ -139,7 +140,7 @@
                 <table style="table-layout: fixed; width: 100%;">
                     <tr>
                         <td style="text-align: left;">
-                            <p>Trade opened on <span style="font-weight: bold;">{{ trade.open_date }}</span>, for <span style="font-weight: bold;">${{ trade.open_premium }}</span>
+                            <p>Trade opened on <span class="panel-body-open-date" style="font-weight: bold;">{{ trade.open_date }}</span>, for <span style="font-weight: bold;">${{ trade.open_premium }}</span>
                                 {% if trade.open_underlying %}
                                     with underlying at <span style="font-weight: bold;">${{ trade.open_underlying}}</span>
                                 {% endif %}

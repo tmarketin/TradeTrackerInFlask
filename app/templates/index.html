@@ -17,7 +17,84 @@
         <li id="filterButtonOpen" role="presentation" onclick="filterOpenTrades()"><a href="#">Open</a></li>
         <li id="filterButtonWins" role="presentation" onclick="filterWinningTrades()"><a href="#">Wins</a></li>
         <li id="filterButtonLosses" role="presentation" onclick="filterLosingTrades()"><a href="#">Losses</a></li>
-      </ul>
+    </ul>
+
+    <table>
+        <tr>
+            <td style="padding-right: 10px;">
+                <div class="btn-group" role="group" aria-label="..." style="padding-bottom: 30px;">
+                    <button type="button" class="btn btn-primary" disabled>Filter by status:</button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" id="btn-filter-status" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onchange="report()">
+                            <span id="btn-filter-text-content">All</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" onclick="setFilterValue('btn-filter-status', this.innerHTML)">All</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-status', this.innerHTML)">Open</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-status', this.innerHTML)">Wins</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-status', this.innerHTML)">Losses</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+            <td style="padding-right: 10px;">
+                <div class="btn-group" role="group" aria-label="..." style="padding-bottom: 30px;">
+                    <button type="button" class="btn btn-primary" disabled>Filter by strategy:</button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" id="btn-filter-strategy" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onchange="report()">
+                            <span id="btn-filter-text-content">All</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" onclick="setFilterValue('btn-filter-strategy', this.innerHTML)">All</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-strategy', this.innerHTML)">Long Call</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-strategy', this.innerHTML)">Long Put</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-strategy', this.innerHTML)">Cash Secured Put</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+            <td style="padding-right: 10px;">
+                <div class="btn-group" role="group" aria-label="..." style="padding-bottom: 30px;">
+                    <button type="button" class="btn btn-primary" disabled>Filter by ticker:</button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" id="btn-filter-ticker" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onchange="report()">
+                            <span id="btn-filter-text-content">All</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" onclick="setFilterValue('btn-filter-ticker', this.innerHTML)">All</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-ticker', this.innerHTML)">MU</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-ticker', this.innerHTML)">NCLH</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-ticker', this.innerHTML)">SPCE</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+            <td style="padding-right: 10px;">
+                <div class="btn-group" role="group" aria-label="..." style="padding-bottom: 30px;">
+                    <button type="button" class="btn btn-primary" disabled>Filter by year:</button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" id="btn-filter-year" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onchange="report()">
+                            <span id="btn-filter-text-content">All</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" onclick="setFilterValue('btn-filter-year', this.innerHTML)">All</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-year', this.innerHTML)">2019</a></li>
+                            <li><a href="#" onclick="setFilterValue('btn-filter-year', this.innerHTML)">2020</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+            <td style="padding-right: 10px;">
+                <div class="btn-group" role="group" aria-label="..." style="padding-bottom: 30px;">
+                    <button type="button" class="btn btn-primary" onclick="resetFilters()">Reset filters</button>
+                </div>
+            </td>
+        </tr>
+    </table>
 
     {% for trade in trades %}
         {% if trade.status == "Open" %}

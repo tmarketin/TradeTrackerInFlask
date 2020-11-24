@@ -95,7 +95,7 @@ function filterLosingTrades() {
     let losingTrades = document.getElementsByClassName("panel-danger");
 
     let idx;
-    // make open trades visible
+    // make open trades not visible
     for(idx = 0; idx < openTrades.length; idx++) {
         openTrades[idx].style.display = "none";
     }
@@ -106,5 +106,39 @@ function filterLosingTrades() {
     // make losing trades not visible
     for(idx = 0; idx < losingTrades.length; idx++) {
         losingTrades[idx].style.display = "block";
+    }
+}
+
+function setFilterValue(btnId, value) {
+    document.getElementById(btnId).getElementsByTagName("span")[0].innerHTML = value;
+    filterContent()
+}
+
+function resetFilters() {
+    let idList = ["btn-filter-status", "btn-filter-strategy", "btn-filter-ticker", "btn-filter-year"];
+
+    for(let id of idList) {
+        document.getElementById(id).getElementsByTagName("span")[0].innerHTML = "All";
+    }
+}
+
+function filterContent() {
+    let idStatus = "btn-filter-status";
+
+    let filterStatusValue = document.getElementById(idStatus).getElementsByTagName("span")[0].innerHTML;
+    let filterStatusClassMap = new Map();
+    filterStatusClassMap.set('All', 'panel');
+    filterStatusClassMap.set('Open', 'panel-warning');
+    filterStatusClassMap.set('Wins', 'panel-success');
+    filterStatusClassMap.set('Losses', 'panel-danger');
+
+    let tradesList = document.getElementsByClassName("panel");
+    for(let idx = 0; idx < tradesList.length; idx++) {
+        if (tradesList[idx].classList.contains(filterStatusClassMap.get(filterStatusValue))) {
+            tradesList[idx].style.display = "block";
+        }
+        else {
+            tradesList[idx].style.display = "none";
+        }
     }
 }

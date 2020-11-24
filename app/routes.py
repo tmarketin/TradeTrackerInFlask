@@ -13,7 +13,11 @@ import app.utils_routes as rhelp
 def index():
     user = User.query.filter_by(username = current_user.username).first()
     trades = user.trades.order_by(Trade.open_date.desc()).all()
-    return render_template('index.html', title="Home", trades=trades)
+    listStrategies = rhelp.getListOfStrategies(trades)
+    listTickers = rhelp.getListOfTickers(trades)
+    listYears = rhelp.getListOfYears(trades)
+    return render_template('index.html', title="Home", trades=trades, strats=listStrategies, tickers=listTickers, \
+        years=listYears)
 
 @appInstance.route('/statistics')
 @login_required
@@ -21,10 +25,8 @@ def statistics():
     user = User.query.filter_by(username = current_user.username).first()
     trades = user.trades.order_by(Trade.open_date.desc()).all()
     stats = rhelp.getStats(trades)
-#    plotCountByStrat = rhelp.getBarChart(stats['countByStrat'], 'Counts by strategy')
     plotCountByStrat = rhelp.getCountByStratChart(stats['countByStrat'], 'Counts by strategy')
     plotCountByTicker = rhelp.getCountByStratChart(stats['countByTicker'], 'Counts by ticker')
-#    plotCountByTicker = rhelp.getBarChart(stats['countByTicker'], 'Counts by ticker')
     plotPnlByStrategy = rhelp.getBarChart(stats['pnlByStrat'], 'P/L by strategy')
     plotPnlByTicker = rhelp.getBarChart(stats['pnlByTicker'], 'P/L by ticker')
     return render_template('statistics.html', stats = stats, figureCountsByStrat = plotCountByStrat, \

@@ -150,6 +150,34 @@ def editTradeFromForm(formInstance, trade):
                     trade = trade)
                 db.session.add(tradeLeg)
 
+def getListOfStrategies(trades):
+    """ returns an alphabetical list of all strategies used in trades """
+    res = []
+    for trade in trades:
+        if not trade.strategy in res:
+            res.append(trade.strategy)
+    
+    return ["All"] + sorted(res)
+
+def getListOfTickers(trades):
+    """ returns an alphabetical list of all tickers used in trades """
+    res = []
+    for trade in trades:
+        if not trade.ticker in res:
+            res.append(trade.ticker)
+    
+    return ["All"] + sorted(res)
+
+def getListOfYears(trades):
+    """ returns an alphabetical list of all tickers used in trades """
+    res = []
+    for trade in trades:
+        year = trade.open_date.year
+        if not year in res:
+            res.append(year)
+    
+    return ["All"] + sorted(res, reverse=True)
+
 def getStats(trades):
     stats = defaultdict(lambda: 0)
     stats['countByStrat'] = defaultdict(lambda: 0)

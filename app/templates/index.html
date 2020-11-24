@@ -40,10 +40,9 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="#" onclick="setFilterValue('btn-filter-strategy', this.innerHTML)">All</a></li>
-                            <li><a href="#" onclick="setFilterValue('btn-filter-strategy', this.innerHTML)">Long Call</a></li>
-                            <li><a href="#" onclick="setFilterValue('btn-filter-strategy', this.innerHTML)">Long Put</a></li>
-                            <li><a href="#" onclick="setFilterValue('btn-filter-strategy', this.innerHTML)">Cash Secured Put</a></li>
+                            {% for strat in strats %}
+                                <li><a href="#" onclick="setFilterValue('btn-filter-strategy', this.innerHTML)">{{ strat }}</a></li>                                
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -57,10 +56,9 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="#" onclick="setFilterValue('btn-filter-ticker', this.innerHTML)">All</a></li>
-                            <li><a href="#" onclick="setFilterValue('btn-filter-ticker', this.innerHTML)">MU</a></li>
-                            <li><a href="#" onclick="setFilterValue('btn-filter-ticker', this.innerHTML)">NCLH</a></li>
-                            <li><a href="#" onclick="setFilterValue('btn-filter-ticker', this.innerHTML)">SPCE</a></li>
+                            {% for ticker in tickers %}
+                                <li><a href="#" onclick="setFilterValue('btn-filter-ticker', this.innerHTML)">{{ ticker }}</a></li>                                
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -74,9 +72,9 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="#" onclick="setFilterValue('btn-filter-year', this.innerHTML)">All</a></li>
-                            <li><a href="#" onclick="setFilterValue('btn-filter-year', this.innerHTML)">2019</a></li>
-                            <li><a href="#" onclick="setFilterValue('btn-filter-year', this.innerHTML)">2020</a></li>
+                            {% for year in years %}
+                                <li><a href="#" onclick="setFilterValue('btn-filter-year', this.innerHTML)">{{ year }}</a></li>                                
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>

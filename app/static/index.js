@@ -41,21 +41,55 @@ function filterContent() {
     let filterYearValue = document.getElementById(idYear).getElementsByTagName("span")[0].innerHTML;
 
     let tradesList = document.getElementsByClassName("panel");
-    for(let idx = 0; idx < tradesList.length; idx++) {
-        let isStatusFilterOk = tradesList[idx].classList.contains(filterStatusClassMap.get(filterStatusValue));
-        let isStrategyFilterOk = (tradesList[idx].getElementsByClassName("panel-heading-strategy")[0].innerHTML == filterStrategyValue)
+    let visibleStrategyList = ["All"];
+    let visibleTickerList = ["All"];
+    let visibleYearList = ["All"];
+    for(let trade of tradesList) {
+        let isStatusFilterOk = trade.classList.contains(filterStatusClassMap.get(filterStatusValue));
+        let isStrategyFilterOk = (trade.getElementsByClassName("panel-heading-strategy")[0].innerHTML == filterStrategyValue)
                                 || (filterStrategyValue == "All");
-        let isTickerFilterOk = (tradesList[idx].getElementsByClassName("panel-heading-ticker")[0].innerHTML == filterTickerValue)
+        let isTickerFilterOk = (trade.getElementsByClassName("panel-heading-ticker")[0].innerHTML == filterTickerValue)
                                 || (filterTickerValue == "All");
 
-        let oDate = new Date(tradesList[idx].getElementsByClassName("panel-body-open-date")[0].innerHTML);
+        let oDate = new Date(trade.getElementsByClassName("panel-body-open-date")[0].innerHTML);
         let isYearFilterOk = (oDate.getFullYear() == filterYearValue) || (filterYearValue == "All");
         
         if (isStatusFilterOk && isStrategyFilterOk && isTickerFilterOk && isYearFilterOk) {
-            tradesList[idx].style.display = "block";
+            trade.style.display = "block";
+            let strat = trade.getElementsByClassName("panel-heading-strategy")[0].innerHTML;
+            if(! visibleStrategyList.includes(strat)) {
+                visibleStrategyList.push(strat);
+            }
+
+            let ticker = trade.getElementsByClassName("panel-heading-ticker")[0].innerHTML;
+            if(! visibleTickerList.includes(ticker)) {
+                visibleTickerList.push(ticker);
+            }
+
+            let year = oDate.getFullYear();
+            if(! visibleYearList.includes(year)) {
+                visibleYearList.push(year);
+            }
+            
         }
         else {
-            tradesList[idx].style.display = "none";
+            trade.style.display = "none";
+        }
+    }
+
+    filterButtonOptions(visibleStrategyList, "button-filter-strategy-option");
+    filterButtonOptions(visibleTickerList, "button-filter-ticker-option");
+    filterButtonOptions(visibleYearList, "button-filter-year-option");
+}
+
+function filterButtonOptions(visibleStrategyList, optionClass) {
+    let buttonStrategyOptions = document.getElementsByClassName(optionClass);
+    for(let option of buttonStrategyOptions) {
+        if(visibleStrategyList.includes(option.innerHTML)) {
+            option.style.display = "block";
+        }
+        else {
+            option.style.display = "none";
         }
     }
 }

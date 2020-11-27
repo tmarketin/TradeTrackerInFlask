@@ -1,38 +1,129 @@
-function displayTradeLegsFromStrategy() {
-    let strategy = document.getElementById("strategy").value;
-
-    document.getElementById("leg-0-form").style.visibility = "visible";
-    switch(strategy) {
-        case "Long Call":
-        case "Long Put":
-        case "Covered Call":
-        case "Cash Secured Put":
+function setLegs(noLegs) {
+    switch(noLegs) {
+        case 1:
             document.getElementById("no_legs").value = "1";
 
+            document.getElementById("leg-0-form").style.visibility = "visible";
             document.getElementById("leg-1-form").style.visibility = "collapse";
             document.getElementById("leg-2-form").style.visibility = "collapse";
             document.getElementById("leg-3-form").style.visibility = "collapse";
             break;
-        case "Put Credit Spread":
-        case "Put Debit Spread":
-        case "Call Credit Spread":
-        case "Call Debit Spread":
-        case "Calendar Call Spread":
-        case "Calendar Put Spread":
-        case "Diagonal Spread":
-        case "Diagonal Spread (PMCC)":
-            document.getElementById("no_legs").value = 2;
+        case 2:
+            document.getElementById("no_legs").value = "2";
 
+            document.getElementById("leg-0-form").style.visibility = "visible";
             document.getElementById("leg-1-form").style.visibility = "visible";
             document.getElementById("leg-2-form").style.visibility = "collapse";
             document.getElementById("leg-3-form").style.visibility = "collapse";
             break;
-        case "Double Calendar Spread":
-            document.getElementById("no_legs").value = 4;
+        case 3:
+            document.getElementById("no_legs").value = "3";
 
+            document.getElementById("leg-0-form").style.visibility = "visible";
+            document.getElementById("leg-1-form").style.visibility = "visible";
+            document.getElementById("leg-2-form").style.visibility = "visible";
+            document.getElementById("leg-3-form").style.visibility = "collapse";
+            break;
+        case 4:
+            document.getElementById("no_legs").value = "4";
+
+            document.getElementById("leg-0-form").style.visibility = "visible";
             document.getElementById("leg-1-form").style.visibility = "visible";
             document.getElementById("leg-2-form").style.visibility = "visible";
             document.getElementById("leg-3-form").style.visibility = "visible";
+            break;
+    }
+}
+
+function displayTradeLegsFromStrategy() {
+    let strategy = document.getElementById("strategy").value;
+
+    switch(strategy) {
+        case "Long Call":
+            setLegs(1);
+            document.getElementById("legs-0-opened").value = "bought";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "call";
+            break;
+        case "Long Put":
+            setLegs(1);
+            document.getElementById("legs-0-opened").value = "bought";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "put";
+            break;
+        case "Covered Call":
+            setLegs(1);
+            document.getElementById("legs-0-opened").value = "sold";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "call";
+            break;
+        case "Cash Secured Put":
+            setLegs(1);
+            document.getElementById("legs-0-opened").value = "sold";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "put";
+            break;
+        case "Put Credit Spread":
+        case "Calendar Put Spread":
+            setLegs(2);
+            document.getElementById("legs-0-opened").value = "sold";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "put";
+
+            document.getElementById("legs-1-opened").value = "bought";
+            document.getElementById("legs-1-size").value = "1";
+            document.getElementById("legs-1-contract_type").value = "put";
+            break;
+        case "Put Debit Spread":
+            setLegs(2);
+            document.getElementById("legs-0-opened").value = "bought";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "put";
+
+            document.getElementById("legs-1-opened").value = "sold";
+            document.getElementById("legs-1-size").value = "1";
+            document.getElementById("legs-1-contract_type").value = "put";
+            break;
+        case "Call Credit Spread":
+            setLegs(2);
+            document.getElementById("legs-0-opened").value = "bought";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "call";
+
+            document.getElementById("legs-1-opened").value = "sold";
+            document.getElementById("legs-1-size").value = "1";
+            document.getElementById("legs-1-contract_type").value = "call";
+            break;
+        case "Call Debit Spread":
+        case "Calendar Call Spread":
+        case "Diagonal Spread":
+        case "Diagonal Spread (PMCC)":
+            setLegs(2);
+            document.getElementById("legs-0-opened").value = "sold";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "call";
+
+            document.getElementById("legs-1-opened").value = "bought";
+            document.getElementById("legs-1-size").value = "1";
+            document.getElementById("legs-1-contract_type").value = "call";
+            break;
+        case "Double Calendar Spread":
+            setLegs(4);
+            document.getElementById("legs-0-opened").value = "sold";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "call";
+
+            document.getElementById("legs-1-opened").value = "bought";
+            document.getElementById("legs-1-size").value = "1";
+            document.getElementById("legs-1-contract_type").value = "call";
+
+            document.getElementById("legs-2-opened").value = "sold";
+            document.getElementById("legs-2-size").value = "1";
+            document.getElementById("legs-2-contract_type").value = "put";
+
+            document.getElementById("legs-3-opened").value = "bought";
+            document.getElementById("legs-3-size").value = "1";
+            document.getElementById("legs-3-contract_type").value = "put";
 
             break;
         default:

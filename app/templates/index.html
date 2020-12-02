@@ -5,8 +5,24 @@
 {% endblock title %}
 
 {% block jumbotron_content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
-    <h2>This is a list of all the trades...</h2>
+    <h2>Current status:</h2>
+    <table style="table-layout: fixed; width: 100%; font-size: 1.35em;">
+        <tr>
+            <td style="width: 25%">Total trades: {{ stats['countTotalTrades'] }}</td>
+            <td style="width: 25%">Open trades: {{ stats['countOpenTrades'] }}</td>
+            <td style="width: 25%">Winning trades: {{ stats['countWinningTrades'] }}</td>
+            <td style="width: 25%">Losing trades: {{ stats['countLosingTrades']}}</td>
+        </tr>
+        <tr>
+            <td>Open credit: {{ '%0.2f'|format(stats['openCredit']|float) }}</td>
+            <td>Open debit: {{ '%0.2f'|format(stats['openDebit']|float) }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Open credit risk: {{ '%0.2f'|format(stats['openCreditRisk']|float) }}</td>
+        </tr>
+    </table>
 {% endblock jumbotron_content %}
 
 {% block app_content %}

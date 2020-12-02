@@ -178,6 +178,19 @@ def getListOfYears(trades):
     
     return ["All"] + sorted(res, reverse=True)
 
+def getTradeRisk(trade):
+    risk = 0
+    if(trade.strategy == "Cash Secured Put"):
+        risk = trade.no_contracts*trade.legs[-1].strike
+    elif(trade.strategy == "Put Credit Spread"):
+        strikeDiff = abs(trade.legs[-1].strike - trade.legs[-2].strike)
+        risk = trade.no_contracts*(strikeDiff - trade.open_premium)
+    elif(trade.strategy == "Call Credit Spread"):
+        strikeDiff = abs(trade.legs[-1].strike - trade.legs[-2].strike)
+        risk = trade.no_contracts*(strikeDiff - trade.open_premium)
+    
+    return risk
+
 def getStats(trades):
     stats = defaultdict(lambda: 0)
     stats['countByStrat'] = defaultdict(lambda: 0)
@@ -196,9 +209,10 @@ def getStats(trades):
             stats['countByStrat'][trade.strategy]['Open'] += 1
             stats['countByTicker'][trade.ticker]['Open'] += 1
             if trade.open_premium > 0:
-                stats['openCredit'] += trade.open_premium
+                stats['openCredit'] += trade.open_premium*trade.no_contracts
+                stats['openCreditRisk'] += getTradeRisk(trade)
             else:
-                stats['openDebit'] -= trade.open_premium
+                stats['openDebit'] -= trade.open_premium*trade.no_contracts
         else:
             stats['countClosedTrades'] += 1
             stats['pnlTotal'] += trade.pnl

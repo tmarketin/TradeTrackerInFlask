@@ -13,11 +13,12 @@ import app.utils_routes as rhelp
 def index():
     user = User.query.filter_by(username = current_user.username).first()
     trades = user.trades.order_by(Trade.open_date.desc()).all()
+    stats = rhelp.getStats(trades)
     listStrategies = rhelp.getListOfStrategies(trades)
     listTickers = rhelp.getListOfTickers(trades)
     listYears = rhelp.getListOfYears(trades)
     return render_template('index.html', title="Home", trades=trades, strats=listStrategies, tickers=listTickers, \
-        years=listYears)
+        years=listYears, stats=stats)
 
 @appInstance.route('/statistics')
 @login_required

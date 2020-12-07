@@ -15,6 +15,7 @@
                 <td style="padding-left: 10px; padding-right: 10px;">
                     {{ form.strategy.label(class_="sr-only") }} {{ form.strategy(size=64, onchange="displayTradeLegsFromStrategy()", list="id_datalist", class_="form-control", placeholder="Trade Strategy") }}
                     <datalist id="id_datalist">
+                        <option value="Stock"></option>
                         <option value="Long Call"></option>
                         <option value="Long Put"></option>
                         <option value="Cash Secured Put"></option>
@@ -42,7 +43,7 @@
                     {% endfor %}
                 </td>
                 <td style="padding-left: 10px; padding-right: 10px;">
-                    {{ form.no_legs.label(class_="sr-only") }} {{ form.no_legs(min="1", max="4", onchange="displayTradeLegsFromNoLegs()", class_="form-control", placeholder="# legs") }}
+                    {{ form.no_legs.label(class_="sr-only") }} {{ form.no_legs(min="0", max="4", onchange="displayTradeLegsFromNoLegs()", class_="form-control", placeholder="# legs") }}
                     {% for error in form.no_legs.errors %}
                         <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
@@ -70,7 +71,11 @@
                 <td style="padding-left: 10px; padding-right: 10px;">
                     <div class="input-group">
                         <span class="input-group-addon" id="open-underlying-addon">$</span>
-                        {{ form.open_underlying.label(class_="sr-only") }} {{ form.open_underlying(step="0.01", min="0.00", class_="form-control", placeholder="Underlying @ open") }}
+                        {% if form.strategy.data == "Stock" %}
+                            {{ form.open_underlying.label(class_="sr-only") }} {{ form.open_underlying(step="0.01", min="0.00", class_="form-control", placeholder="Underlying @ open", readonly=True) }}
+                        {% else %}
+                            {{ form.open_underlying.label(class_="sr-only") }} {{ form.open_underlying(step="0.01", min="0.00", class_="form-control", placeholder="Underlying @ open") }}
+                        {% endif %}
                     </div> 
                     {% for error in form.open_underlying.errors %}
                         <span style="color: red;">[{{ error }}]</span>
@@ -96,7 +101,11 @@
                 <td style="padding-left: 10px; padding-right: 10px;">
                     <div class="input-group">
                         <span class="input-group-addon" id="close-underlying-addon">$</span>
-                        {{ form.close_underlying.label(class_="sr-only") }} {{ form.close_underlying(step="0.01", min="0.00", class_="form-control", placeholder="Underlying @ close") }}
+                        {% if form.strategy.data == "Stock" %}
+                            {{ form.close_underlying.label(class_="sr-only") }} {{ form.close_underlying(step="0.01", min="0.00", class_="form-control", placeholder="Underlying @ close", readonly=True) }}
+                        {% else %}
+                            {{ form.close_underlying.label(class_="sr-only") }} {{ form.close_underlying(step="0.01", min="0.00", class_="form-control", placeholder="Underlying @ close") }}
+                        {% endif %}
                     </div>
                     {% for error in form.close_underlying.errors %}
                         <span style="color: red;">[{{ error }}]</span>
@@ -127,8 +136,8 @@
         </table>
         <table id="tradelegs-form-container" style="table-layout: fixed; width: 80%; border-spacing: 0 5px;">
             {% for subform in form.legs %}
-                {% if form.no_legs.data %}
-                    {% if loop.index0 >= form.no_legs.data %}
+                {% if form.no_legs.data is defined and form.no_legs.data is not none %}
+                    {% if loop.index0 >= form.no_legs.data|int() %}
                         <tr id="leg-{{ loop.index0 }}-form" class="subform" data-index="{{ loop.index0 }}" style="visibility: collapse;">
                     {% else %}
                         <tr id="leg-{{ loop.index0 }}-form" class="subform" data-index="{{ loop.index0 }}" style="visibility: visible;">

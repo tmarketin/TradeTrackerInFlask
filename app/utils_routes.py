@@ -76,13 +76,14 @@ def populateTradeForm(formInstance, trade):
     formInstance.close_underlying.data = trade.close_underlying
     formInstance.pnl.data = trade.pnl
     formInstance.dailypnl.data = trade.dailypnl
-    for idx in range(formInstance.no_legs.data):
-        legIdx = len(trade.legs.all()) - trade.no_legs + idx
-        formInstance.legs.entries[idx].opened.data = trade.legs[legIdx].opened
-        formInstance.legs.entries[idx].size.data = trade.legs[legIdx].size
-        formInstance.legs.entries[idx].contract_type.data = trade.legs[legIdx].contract_type
-        formInstance.legs.entries[idx].strike.data = trade.legs[legIdx].strike
-        formInstance.legs.entries[idx].expiry.data = trade.legs[legIdx].expiry
+    if(trade.no_legs > 0):
+        for idx in range(formInstance.no_legs.data):
+            legIdx = len(trade.legs.all()) - trade.no_legs + idx
+            formInstance.legs.entries[idx].opened.data = trade.legs[legIdx].opened
+            formInstance.legs.entries[idx].size.data = trade.legs[legIdx].size
+            formInstance.legs.entries[idx].contract_type.data = trade.legs[legIdx].contract_type
+            formInstance.legs.entries[idx].strike.data = trade.legs[legIdx].strike
+            formInstance.legs.entries[idx].expiry.data = trade.legs[legIdx].expiry
 
 def populateRollForm(form, trade):
     """ when rolling a trade, prepopulates the form with values from db """
@@ -208,7 +209,9 @@ def getStats(trades):
             stats['countByStratOpen'] += 1
             stats['countByStrat'][trade.strategy]['Open'] += 1
             stats['countByTicker'][trade.ticker]['Open'] += 1
-            if trade.open_premium > 0:
+            if trade.strategy == "Stock":
+                stats['openStock'] -= trade.open_premium*trade.no_contracts
+            elif trade.open_premium > 0:
                 stats['openCredit'] += trade.open_premium*trade.no_contracts
                 stats['openCreditRisk'] += getTradeRisk(trade)
             else:

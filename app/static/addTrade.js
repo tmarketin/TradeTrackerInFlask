@@ -1,5 +1,13 @@
 function setLegs(noLegs) {
     switch(noLegs) {
+        case 0:
+            document.getElementById("no_legs").value = "0";
+
+            document.getElementById("leg-0-form").style.visibility = "collapse";
+            document.getElementById("leg-1-form").style.visibility = "collapse";
+            document.getElementById("leg-2-form").style.visibility = "collapse";
+            document.getElementById("leg-3-form").style.visibility = "collapse";
+            break;
         case 1:
             document.getElementById("no_legs").value = "1";
 
@@ -39,6 +47,20 @@ function displayTradeLegsFromStrategy() {
     let strategy = document.getElementById("strategy").value;
 
     switch(strategy) {
+        case "Stock":
+            document.getElementById("open_underlying").setAttribute('readonly', '');
+            document.getElementById("close_underlying").setAttribute('readonly', '');
+            break;
+        default:
+            document.getElementById("open_underlying").removeAttribute('readonly');
+            document.getElementById("close_underlying").removeAttribute('readonly');
+            break;
+    }
+
+    switch(strategy) {
+        case "Stock":
+            setLegs(0);
+            break;
         case "Long Call":
             setLegs(1);
             document.getElementById("legs-0-opened").value = "bought";
@@ -135,29 +157,7 @@ function displayTradeLegsFromStrategy() {
 function displayTradeLegsFromNoLegs() {
     let noLegs = document.getElementById("no_legs").value;
 
-    document.getElementById("leg-0-form").style.visibility = "visible";
-    switch(noLegs) {
-        case "1":
-            document.getElementById("leg-1-form").style.visibility = "collapse";
-            document.getElementById("leg-2-form").style.visibility = "collapse";
-            document.getElementById("leg-3-form").style.visibility = "collapse";
-            break;
-        case "2":
-            document.getElementById("leg-1-form").style.visibility = "visible";
-            document.getElementById("leg-2-form").style.visibility = "collapse";
-            document.getElementById("leg-3-form").style.visibility = "collapse";
-            break;
-        case "3":
-            document.getElementById("leg-1-form").style.visibility = "visible";
-            document.getElementById("leg-2-form").style.visibility = "visible";
-            document.getElementById("leg-3-form").style.visibility = "collapse";
-            break;
-        case "4":
-            document.getElementById("leg-1-form").style.visibility = "visible";
-            document.getElementById("leg-2-form").style.visibility = "visible";
-            document.getElementById("leg-3-form").style.visibility = "visible";
-            break;
-    }
+    setLegs(parseInt(noLegs));
 }
 
 function calcPnl() {
@@ -170,6 +170,9 @@ function calcPnl() {
     console.log("calcPnl function called");
     if ((! [undefined, null, ''].includes(oPrem)) && (! [undefined, null, ''].includes(cPrem))) {
         let pnl = (parseFloat(oPrem) + parseFloat(cPrem))*noContracts;
+        if(document.getElementById("strategy").value != "Stock") {
+            pnl = pnl*100; // each contract corresponds to 100 shares
+        }
         document.getElementById('pnl').value = pnl.toFixed(2);
 
         console.log("odate: " + oDate);

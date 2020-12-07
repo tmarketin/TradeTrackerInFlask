@@ -14,13 +14,13 @@
             <td style="width: 25%">Losing trades: {{ stats['countLosingTrades']}}</td>
         </tr>
         <tr>
-            <td>Open credit: {{ '%0.2f'|format(stats['openCredit']|float) }}</td>
-            <td>Open debit: {{ '%0.2f'|format(stats['openDebit']|float) }}</td>
-            <td></td>
+            <td>Open credit: {{ '%0.2f'|format(100*stats['openCredit']|float) }}</td>
+            <td>Open debit: {{ '%0.2f'|format(100*stats['openDebit']|float) }}</td>
+            <td>Open stock: {{ '%0.2f'|format(stats['openStock']|float) }}</td>
             <td></td>
         </tr>
         <tr>
-            <td>Open credit risk: {{ '%0.2f'|format(stats['openCreditRisk']|float) }}</td>
+            <td>Open credit risk: {{ '%0.2f'|format(100*stats['openCreditRisk']|float) }}</td>
         </tr>
     </table>
 {% endblock jumbotron_content %}
@@ -115,12 +115,19 @@
                 <h3 class="panel-title">
                     <table style="table-layout: fixed; width: 100%;">
                         <tr>
-                            <td style="text-align: left;">
-                                <span class="panel-heading-ticker">{{ trade.ticker }}</span> ({{ trade.playid }})</td>
-                            {% if trade.no_contracts == 1 %}
-                                <td style="text-align: right;">{{ trade.no_contracts }} contract</td>
+                            <td style="text-align: left;"><span class="panel-heading-ticker">{{ trade.ticker }}</span> ({{ trade.playid }})</td>
+                            {% if trade.strategy == "Stock" %}
+                                {% if trade.no_contracts == 1 %}
+                                    <td style="text-align: right;">{{ trade.no_contracts }} share</td>
+                                {% else %}
+                                    <td style="text-align: right;">{{ trade.no_contracts }} shares</td>
+                                {% endif %}
                             {% else %}
-                                <td style="text-align: right;">{{ trade.no_contracts }} contracts</td>
+                                {% if trade.no_contracts == 1 %}
+                                    <td style="text-align: right;">{{ trade.no_contracts }} contract</td>
+                                {% else %}
+                                    <td style="text-align: right;">{{ trade.no_contracts }} contracts</td>
+                                {% endif %}
                             {% endif %}
                             <td class="panel-heading-strategy" style="text-align: right">{{ trade.strategy }}</td>
                             <td style="text-align: right">
@@ -147,7 +154,7 @@
                 <table style="table-layout: fixed; width: 100%;">
                     <tr>
                         <td style="text-align: left;">
-                            <p>Trade opened on <span class="panel-body-open-date" style="font-weight: bold;">{{ trade.open_date }}</span>, for <span style="font-weight: bold;">${{ trade.open_premium }}</span>
+                            <p>Trade opened on <span class="panel-body-open-date" style="font-weight: bold;">{{ trade.open_date }}</span>, for <span style="font-weight: bold;">${{ trade.open_premium }}</span> each
                                 {% if trade.open_underlying %}
                                     with underlying at <span style="font-weight: bold;">${{ trade.open_underlying}}</span>
                                 {% endif %}
@@ -155,7 +162,7 @@
                         </td>
                         <td style="text-align: right;">
                             {% if trade.status != "Open" %}
-                            <p>Trade closed on <span style="font-weight: bold;">{{ trade.close_date }}</span>, for <span style="font-weight: bold;">${{ trade.close_premium }}</span>
+                            <p>Trade closed on <span style="font-weight: bold;">{{ trade.close_date }}</span>, for <span style="font-weight: bold;">${{ trade.close_premium }}</span> each
                                 {% if trade.close_underlying %}
                                     with underlying at <span style="font-weight: bold;">${{ trade.close_underlying }}</span>
                                 {% endif %}

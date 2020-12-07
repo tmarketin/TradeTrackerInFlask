@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm, Form
 from wtforms.fields import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, FormField, FieldList
 from wtforms.fields.html5 import DateField, IntegerField, DecimalField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Optional
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Optional, InputRequired
 from app.models import User
 
 class LoginForm(FlaskForm):
@@ -35,14 +35,14 @@ class TradeLegForm(FlaskForm):
     expiry = DateField('Expiry date', validators = [Optional()])
 
 class TradeForm(FlaskForm):
-    ticker = StringField('Ticker', validators = [DataRequired()])
+    ticker = StringField('Ticker', validators = [InputRequired()])
     playid = StringField('Trade ID', validators = [Optional()])
-    strategy = StringField('Strategy', validators = [DataRequired()])
-    no_contracts = IntegerField('Number of contracts', validators = [DataRequired()])
-    no_legs = IntegerField('Number of legs', validators = [DataRequired()])
+    strategy = StringField('Strategy', validators = [InputRequired()])
+    no_contracts = IntegerField('Number of contracts', validators = [InputRequired()])
+    no_legs = IntegerField('Number of legs', validators = [InputRequired()])
     comment = TextAreaField('Comment', validators = [Optional()])
-    open_date = DateField('Date opened', validators = [DataRequired()])
-    open_premium = DecimalField('Opening premium', validators = [DataRequired()], places = 2)
+    open_date = DateField('Date opened', validators = [InputRequired()])
+    open_premium = DecimalField('Opening premium', validators = [InputRequired()], places = 2)
     open_underlying = DecimalField('Underlying at open', validators = [Optional()], places = 2)
     close_date = DateField('Date closed', validators = [Optional()])
     close_premium = DecimalField('Closing premium', validators = [Optional()], places = 2)
@@ -62,6 +62,6 @@ class RollForm(FlaskForm):
     comment = TextAreaField('Comment', validators = [Optional()])
     open_date = DateField('Date opened', validators = [Optional()])
     open_premium = DecimalField('Opening premium', validators = [Optional()], places = 2)
-    roll_premium = DecimalField('Opening premium', validators = [DataRequired()], places = 2)
+    roll_premium = DecimalField('Opening premium', validators = [InputRequired()], places = 2)
     legs = FieldList(FormField(TradeLegForm), min_entries = 4, max_entries = 4)
     submit = SubmitField('Submit')

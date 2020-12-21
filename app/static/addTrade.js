@@ -129,6 +129,20 @@ function displayTradeLegsFromStrategy() {
             document.getElementById("legs-1-size").value = "1";
             document.getElementById("legs-1-contract_type").value = "call";
             break;
+        case "Unbalanced Butterfly Put":
+            setLegs(3);
+            document.getElementById("legs-0-opened").value = "bought";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "put";
+
+            document.getElementById("legs-1-opened").value = "sold";
+            document.getElementById("legs-1-size").value = "3";
+            document.getElementById("legs-1-contract_type").value = "put";
+
+            document.getElementById("legs-2-opened").value = "bought";
+            document.getElementById("legs-2-size").value = "2";
+            document.getElementById("legs-2-contract_type").value = "put";
+            break;
         case "Double Calendar Spread":
             setLegs(4);
             document.getElementById("legs-0-opened").value = "sold";
@@ -146,7 +160,24 @@ function displayTradeLegsFromStrategy() {
             document.getElementById("legs-3-opened").value = "bought";
             document.getElementById("legs-3-size").value = "1";
             document.getElementById("legs-3-contract_type").value = "put";
+            break;
+        case "Iron Condor":
+            setLegs(4);
+            document.getElementById("legs-0-opened").value = "bought";
+            document.getElementById("legs-0-size").value = "1";
+            document.getElementById("legs-0-contract_type").value = "call";
 
+            document.getElementById("legs-1-opened").value = "sold";
+            document.getElementById("legs-1-size").value = "1";
+            document.getElementById("legs-1-contract_type").value = "call";
+
+            document.getElementById("legs-2-opened").value = "sold";
+            document.getElementById("legs-2-size").value = "1";
+            document.getElementById("legs-2-contract_type").value = "put";
+
+            document.getElementById("legs-3-opened").value = "bought";
+            document.getElementById("legs-3-size").value = "1";
+            document.getElementById("legs-3-contract_type").value = "put";
             break;
         default:
             break;

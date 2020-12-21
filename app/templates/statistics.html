@@ -15,11 +15,11 @@
     <p>Closed trades: {{ stats["countClosedTrades"] }}</p>
     <p>Winning trades: {{ stats["countWinningTrades"] }}</p>
     <p>Losing trades: {{ stats["countLosingTrades"] }}</p>
-    <p>Current total P/L: ${{ stats["pnlTotal"] }}</p>
-    <p>Total gains: ${{ stats["pnlGains"] }}</p>
-    <p>Total losses: ${{ stats["pnlLosses"] }}</p>
-    <p>Current open credit: ${{ stats["openCredit"] }}</p>
-    <p>Current open debit: ${{ stats["openDebit"] }}</p>
+    <p>Current total P/L: ${{ '%0.2f'|format(stats["pnlTotal"]|float) }}</p>
+    <p>Total gains: ${{ '%0.2f'|format(stats["pnlGains"]|float) }}</p>
+    <p>Total losses: ${{ '%0.2f'|format(stats["pnlLosses"]|float) }}</p>
+    <p>Current open credit: ${{ '%0.2f'|format(stats["openCredit"]|float) }}</p>
+    <p>Current open debit: ${{ '%0.2f'|format(stats["openDebit"]|float) }}</p>
     <div class="figureCountsByStrat">
         <table>
             <tr>

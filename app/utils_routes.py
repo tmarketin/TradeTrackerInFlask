@@ -1,4 +1,5 @@
 from collections import defaultdict
+from math import pi
 
 from app import db
 from app.models import Trade, TradeLeg
@@ -261,6 +262,7 @@ def getCountByStratChart(data, chartName):
     plot.xgrid.grid_line_color = None
     plot.axis.minor_tick_line_color = None
     plot.outline_line_color = None
+    plot.xaxis.major_label_orientation = pi/9
     plot.legend.location = 'top_left'
     plot.legend.orientation = 'vertical'
 
@@ -275,6 +277,6 @@ def getBarChart(data, chartName):
     plot = figure(x_range = keys, plot_height = 250, title = chartName, toolbar_location = None, tools = "")
     plot.vbar(x = keys, top = values, width = 0.9)
     plot.xgrid.grid_line_color = None
-    #plot.y_range.start = 0
+    plot.xaxis.major_label_orientation = pi/9
     return file_html(plot, CDN)
   
